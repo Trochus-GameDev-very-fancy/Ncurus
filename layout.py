@@ -23,44 +23,78 @@ class Pad:
     def refresh(self) -> ConsoleEffect:
         self.win.refresh()
 
+    def update(self):
+        ...
+
 
 class Gallery(Pad):
     def __init__(self, win: CursesWin):
-        Pad.__init__(self, win)
+        self.win = win
 
 
-class DialogZone(Pad):
+class Dialogs(Pad):
     def __init__(self, win: CursesWin):
-        max_y, max_x = win.getmaxyx()
-        start_y =[0] // 2 + 1
-        self.win = win.subwin(start_y, 1)
+        self.win = win
+        # self.win.bkgdset("o")
+
+        self.textbox = DialogBox(0, 0, 20, 6, "TextBox")
+
+    def update(self) -> ConsoleEffect:
+        self.textbox.char_by_char(self.win, "test")
 
 
 class Layout:
+    """Encapsulate a layout to manage a set of windows more
+    efficiently.
+    """
+    def __init__(self, win: CursesWin):
+        side_borders_total_width = 2
+        max_y, max_x = win.getmaxyx()
 
-    def __init__(self, *pads: CursesWin):
-        self.pads = pads
+        self.stdscr = win  # Original win.
+        self.win: CursesWin = win.subwin(max_y - side_borders_total_width,
+                                         max_x - side_borders_total_width,
+                                         1, 1)
+
+        self.pads: list = []
+
+    def add_pad(self, *pads: Pad) -> NoReturn:
+        """Add given pads to list of pads managed by the layout."""
+        for pad in pads:
+            self.pads.append(pad)
+
+    def create_bottom_win(self) -> CursesWin:
+        max_y, max_x = self.win.getmaxyx()
+        half_y = max_y // 2
+
+        return self.win.subwin(half_y, 1)
 
     def update(self) -> ConsoleEffect:
+        self.stdscr.clear()
+        self.stdscr.box()
+        self.stdscr.refresh()
+
+    def routine(self) -> ConsoleEffect:
+        if self.stdscr.is_wintouched():
+            self.update()
+
         for pad in self.pads:
             pad.clear()
-            pad.box()
+            pad.update()
             pad.refresh()
 
 
 def main(win):
     curses.curs_set(0)
 
-    gallery = Gallery(win)
-    dialogs = DialogZone(win)
+    layout = Layout(win)
+    gallery = Gallery(layout.win)
+    dialogs = Dialogs(layout.create_bottom_win())
 
-    layout = Layout(gallery, dialogs)
-    textbox = DialogBox(2, 2, 40, 6, "TextBox")
+    layout.add_pad(gallery, dialogs)
 
     while 1:
-        textbox.char_by_char(dialogs.win, "test")
-        layout.update()
-        curses.napms(500)
+        layout.routine()
 
 
 if __name__ == "__main__":
