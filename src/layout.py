@@ -1,50 +1,10 @@
+# layout.py
 
 import curses
 from typing import NoReturn
 
-from more_curses import CursesWin
-from visualdialog import DialogBox
-
-
-ConsoleEffect = NoReturn
-
-
-class Pad:
-    """Encapsulate a pad."""
-    def __init__(self, win: CursesWin):
-        self.win = win
-
-    def box(self) -> ConsoleEffect:
-        self.win.box()
-
-    def clear(self) -> ConsoleEffect:
-        self.win.clear()
-
-    def refresh(self) -> ConsoleEffect:
-        self.win.refresh()
-
-    def update(self):
-        ...
-
-
-class Gallery(Pad):
-    def __init__(self, win: CursesWin):
-        self.win = win
-        # self.win.bkgdset("t")
-
-    def update(self) -> ConsoleEffect:
-        ...
-
-
-class Dialogs(Pad):
-    def __init__(self, win: CursesWin):
-        self.win = win
-        # self.win.bkgdset("b")
-
-        self.textbox = DialogBox(0, 0, 20, 6, "TextBox")
-
-    def update(self) -> ConsoleEffect:
-        self.textbox.char_by_char(self.win, "test")
+from .pad import Pad
+from .type import ConsoleEffect, CursesWin
 
 
 class Layout:
@@ -112,20 +72,3 @@ class Layout:
             pad.clear()
             pad.update()
             pad.refresh()
-
-
-def main(win):
-    curses.curs_set(0)
-
-    layout = Layout(win)
-    gallery = Gallery(layout.create_top_win())
-    dialogs = Dialogs(layout.create_bottom_win())
-
-    layout.add_pad(gallery, dialogs)
-
-    while 1:
-        layout.routine()
-
-
-if __name__ == "__main__":
-    curses.wrapper(main)
