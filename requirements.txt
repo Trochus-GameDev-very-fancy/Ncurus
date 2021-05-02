@@ -1,2 +1,1 @@
 python3 -m pip install git+https://github.com/Tim-ats-d/Visual-dialog
-python3 -m pip install git+https://github.com/Tim-ats-d/More-curses

@@ -16,8 +16,8 @@ def main(win):
     layout.add_pad(gallery, dialogs)
 
     while 1:
-       layout.routine()
-       dialogs.char_by_char("test")
+        layout.routine()
+        dialogs.char_by_char("test")
 
 
 if __name__ == "__main__":
