@@ -2,12 +2,20 @@
 
 import curses
 
+from src.color import start_colors
+from src.img import ASCII, ANSI
 from src.layout import Layout
-from src.pad import Dialogs, Gallery
+from src.pads import Dialogs, Gallery
+
+
+script = [
+    (ANSI(["42", "0123456", "020"]), "test"),
+]
 
 
 def main(win):
     curses.curs_set(0)
+    start_colors()
 
     layout = Layout(win)
     gallery = Gallery(layout.create_top_win())
@@ -15,9 +23,12 @@ def main(win):
 
     layout.add_pad(gallery, dialogs)
 
-    while 1:
+    for img, text in script:
         layout.routine()
-        dialogs.char_by_char("test")
+        gallery.show(img)
+        gallery.refresh()
+
+        dialogs.char_by_char(text)
 
 
 if __name__ == "__main__":

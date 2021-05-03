@@ -1,6 +1,6 @@
 # img.py
 
-from typing import Any, Callable, Iterable, Literal, TextIO, Union
+from typing import Any, Callable, Iterable, Literal, TextIO, Tuple, Union
 
 
 class BaseImage:
@@ -17,9 +17,12 @@ class BaseImage:
         self.width = max(iterable, key=len)
         self.height = len(iterable)
 
+    def __iter__(self) -> Iterable[str]:
+        return iter(self.content)
+
     def is_valid(self,
                  iterable: Iterable[str],
-                 key: Callable[[str], Any]) -> tuple[str]:
+                 key: Callable[[str], Any]) -> Tuple[str]:
         """Return a parsed iterable of string."""
         for index, line in enumerate(iterable):
             for position, char in enumerate(line):
@@ -51,8 +54,8 @@ class ANSI(BaseImage):
               "313",
               "525"])
     """
-    def is_valid(self, iterable: Iterable[str]) -> tuple[str]:
-        key = lambda char: char in "0123456789"
+    def is_valid(self, iterable: Iterable[str]) -> Tuple[str]:
+        key = lambda char: char in "0123456"
 
         return BaseImage.is_valid(self, iterable, key=key)
 
@@ -70,7 +73,7 @@ class ASCII(BaseImage):
                " I ",
                "o o"])
     """
-    def is_valid(self, iterable: Iterable[str]) -> tuple[str]:
+    def is_valid(self, iterable: Iterable[str]) -> Tuple[str]:
         key = lambda char: True
 
         return BaseImage.is_valid(self, iterable, key=key)

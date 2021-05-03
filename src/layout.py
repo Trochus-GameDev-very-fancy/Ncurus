@@ -3,7 +3,7 @@
 import curses
 from typing import NoReturn
 
-from .pad import Pad
+from .pads.pad import Pad
 from .type import ConsoleEffect, CursesWin
 
 
@@ -67,8 +67,3 @@ class Layout:
         """Clear, call update method and refresh all pad."""
         if self.stdscr.is_wintouched():
             self.draw_borders()
-
-        for pad in self.pads:
-            pad.clear()
-            pad.update()
-            pad.refresh()
