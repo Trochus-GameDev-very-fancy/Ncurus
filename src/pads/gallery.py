@@ -3,8 +3,8 @@
 import curses
 
 from src.img import BaseImage
-from .pad import Pad
 from ..type import ConsoleEffect, CursesWin
+from .pad import Pad
 
 
 class Gallery(Pad):
@@ -17,3 +17,5 @@ class Gallery(Pad):
                 self.win.addch(y, x,
                                "█",
                                curses.color_pair(int(char_color)))
+
+        self.refresh()
