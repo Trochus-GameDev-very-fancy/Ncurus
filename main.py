@@ -2,17 +2,15 @@
 
 import curses
 
-from src.color import start_colors
 from src.img import ANSI, ASCII
 from src.layout import Layout
 from src.pads import Dialogs, Gallery
 from src.type import DialogScript
+from src.utils import startup
 
 
+@startup
 def main(win):
-    curses.curs_set(0)
-    start_colors()
-
     layout = Layout(win)
     top_win, bottom_win = layout.divide_window(4)
     gallery = Gallery(top_win)
