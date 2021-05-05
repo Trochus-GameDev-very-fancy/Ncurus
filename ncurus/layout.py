@@ -7,7 +7,7 @@ from .pads.pad import Pad
 from .type import ConsoleEffect, CursesWin
 
 
-class Layout:
+class Layout(Pad):
     """Encapsulate a layout to manage a set of windows more
     efficiently.
     """
@@ -22,16 +22,6 @@ class Layout:
                               1, 1)
 
         self.pads = []
-
-    @property
-    def max_x(self) -> int:
-        """Return number of column of windows."""
-        return self.win.getmaxyx()[1]
-
-    @property
-    def max_y(self) -> int:
-        """Return number of line of windows."""
-        return self.win.getmaxyx()[0]
 
     @property
     def half_y(self) -> int:

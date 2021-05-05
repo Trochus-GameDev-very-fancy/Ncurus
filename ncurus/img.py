@@ -20,6 +20,12 @@ class BaseImage:
     def __iter__(self) -> Iterable[str]:
         return iter(self.content)
 
+    def __getitem__(self, key):
+        if isinstance(key, int):
+            return self.content[key]
+        else:
+            return self.content[key.start:key.stop:key.step]
+
     def is_valid(self,
                  iterable: Iterable[str],
                  key: Callable[[str], Any]) -> Tuple[str]:

@@ -2,11 +2,10 @@
 
 import curses
 
-from src.img import ANSI, ASCII
-from src.layout import Layout
-from src.pads import Dialogs, Gallery
-from src.type import DialogScript
-from src.utils import startup
+from ncurus.img import ANSI, ASCII
+from ncurus.layout import Layout
+from ncurus.pads import Dialogs, DialogScript, Gallery
+from ncurus.utils import startup
 
 
 @startup

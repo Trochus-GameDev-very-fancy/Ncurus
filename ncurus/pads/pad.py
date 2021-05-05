@@ -16,3 +16,13 @@ class Pad:
 
     def refresh(self) -> ConsoleEffect:
         self.win.refresh()
+
+    @property
+    def max_x(self) -> int:
+        """Return number of column of windows."""
+        return self.win.getmaxyx()[1]
+
+    @property
+    def max_y(self) -> int:
+        """Return number of line of windows."""
+        return self.win.getmaxyx()[0]

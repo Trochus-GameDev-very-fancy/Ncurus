@@ -2,7 +2,7 @@
 
 import curses
 
-from src.img import BaseImage
+from ncurus.img import BaseImage
 from ..type import ConsoleEffect, CursesWin
 from .pad import Pad
 
@@ -12,8 +12,13 @@ class Gallery(Pad):
         self.win = win
 
     def show(self, img: BaseImage) -> ConsoleEffect:
-        for y, line in enumerate(img):
-            for x, char_color in enumerate(line):
+        """Display given img in self.win. Images exceeding the width and
+        height of the window are cut off.
+        """
+        max_x, max_y = self.max_x, self.max_y
+        # TODO: Make compatibitly for ASCII image.
+        for y, line in enumerate(img[:self.max_y]):
+            for x, char_color in enumerate(line[:self.max_x]):
                 self.win.addch(y, x,
                                "█",
                                curses.color_pair(int(char_color)))

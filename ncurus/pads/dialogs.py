@@ -1,14 +1,18 @@
 # dialogs.py
 
 from functools import partial
-from typing import Callable, Iterable, Mapping, Tuple
+from typing import Callable, Iterable, Mapping, NamedTuple, Tuple
 
 from visualdialog import DialogBox
 
 from ..img import BaseImage
+from ..type import ConsoleEffect, CursesWin
 from .gallery import Gallery
-from ..type import ConsoleEffect, CursesWin, DialogLine, DialogScript
 from .pad import Pad
+
+
+DialogLine = Tuple[BaseImage, DialogBox, Mapping]
+DialogScript = Iterable[DialogLine]
 
 
 class Dialogs(Pad):
