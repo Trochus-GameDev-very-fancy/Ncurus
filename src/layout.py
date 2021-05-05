@@ -55,6 +55,7 @@ class Layout:
         integer will reduce it.
         """
         self.offsetting_y = offsetting_y
+
         top_win = self.win.subwin(self.half_y + offsetting_y,
                                   self.max_x,
                                   1, 1)
@@ -64,7 +65,7 @@ class Layout:
         return top_win, bottom_win
 
     def draw_borders(self) -> ConsoleEffect:
-        """Draw layout borders."""
+        """Draw layout borders and separation between windows line."""
         self.stdscr.clear()
         self.stdscr.box()
 

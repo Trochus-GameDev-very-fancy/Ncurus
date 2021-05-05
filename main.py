@@ -9,14 +9,6 @@ from src.pads import Dialogs, Gallery
 from src.type import DialogScript
 
 
-script: DialogScript = (
-    (ANSI(["42", "0123456", "020"]), "test"),
-    (..., "second test"),
-    (..., "third test"),
-    (ANSI(["36"]), "third test")
-)
-
-
 def main(win):
     curses.curs_set(0)
     start_colors()
@@ -26,14 +18,27 @@ def main(win):
     gallery = Gallery(top_win)
     dialogs = Dialogs(bottom_win)
 
-    layout.add_pad(gallery, dialogs)
+    dialogs.one = dialogs.box_factory("One")
+    dialogs.two = dialogs.box_factory("Two")
 
-    for img, text in Dialogs.distributor(script):
-        layout.routine()
-        gallery.show(img)
-        gallery.clear()
+    script: DialogScript = (
+        (ANSI(["42", "0123456", "020"]),
+         dialogs.one,
+         {"text": "First test", "text_attr": curses.A_BOLD}),
+        (...,
+         dialogs.two,
+         {"text": "Second test"}),
+        (...,
+         dialogs.one,
+         {"text": "Third test"}),
+        (ANSI(["36"]),
+         dialogs.two,
+         {"text": "Fourth test"})
+    )
 
-        dialogs.char_by_char(text)
+    dialogs.execute_script(script,
+                           gallery,
+                           before=layout.routine)
 
 
 if __name__ == "__main__":
