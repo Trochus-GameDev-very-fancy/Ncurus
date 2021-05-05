@@ -20,16 +20,16 @@ def main(win):
 
     script: DialogScript = (
         (ANSI(["42", "0123456", "020"]),
-         dialogs.one,
+         "one",
          {"text": "First test", "text_attr": curses.A_BOLD}),
         (...,
-         dialogs.two,
+         "two",
          {"text": "Second test"}),
         (...,
-         dialogs.one,
+         "one",
          {"text": "Third test"}),
         (ANSI(["36"]),
-         dialogs.two,
+         "two",
          {"text": "Fourth test"})
     )
 
@@ -40,3 +40,4 @@ def main(win):
 
 if __name__ == "__main__":
     curses.wrapper(main)
+    #TODO: make dialog box responsive.

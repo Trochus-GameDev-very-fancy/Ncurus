@@ -11,7 +11,7 @@ from .gallery import Gallery
 from .pad import Pad
 
 
-DialogLine = Tuple[BaseImage, DialogBox, Mapping]
+DialogLine = Tuple[BaseImage, str, Mapping]
 DialogScript = Iterable[DialogLine]
 
 
@@ -28,19 +28,19 @@ class Dialogs(Pad):
 
         return box
 
-    @classmethod
-    def distributor(cls,
-                    script: DialogScript) -> DialogLine:
+    def distributor(self, script: DialogScript) -> DialogLine:
         """Yield a tuple contains an image and its associated text.
         If Ellipsis is given as the first element of a tuple instead of
         an image, the previous image which is not Ellispis is yielded.
         """
         img_index = 0
-        for i, (img, box, kwargs) in enumerate(script):
+        for i, (img, box_name, kwargs) in enumerate(script):
             index = i
             while img is Ellipsis:
                 img = script[index - 1][img_index]
                 index -= 1
+
+            box = getattr(self, box_name)
 
             yield (img, box, kwargs)
 

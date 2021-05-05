@@ -15,9 +15,10 @@ class Gallery(Pad):
         """Display given img in self.win. Images exceeding the width and
         height of the window are cut off.
         """
-        max_x, max_y = self.max_x, self.max_y
         # TODO: Make compatibitly for ASCII image.
-        for y, line in enumerate(img[:self.max_y]):
+
+        cutted_image = img[:self.max_y]
+        for y, line in enumerate(cutted_image):
             for x, char_color in enumerate(line[:self.max_x]):
                 self.win.addch(y, x,
                                "█",
