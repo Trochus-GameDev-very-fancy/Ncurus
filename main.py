@@ -4,11 +4,13 @@ import curses
 
 from ncurus.img import ANSI, ASCII
 from ncurus.layout import Layout
-from ncurus.pads import Dialogs, DialogScript, Gallery
-from ncurus.utils import startup
+from ncurus.pads import Dialogs, Gallery
+import ncurus
+
+from examples import scene
 
 
-@startup
+@ncurus.startup
 def main(win):
     layout = Layout(win)
     top_win, bottom_win = layout.divide_window(4)
@@ -18,24 +20,9 @@ def main(win):
     dialogs.one = dialogs.box_factory("One")
     dialogs.two = dialogs.box_factory("Two")
 
-    script: DialogScript = (
-        (ANSI(["42", "0123456", "020"]),
-         "one",
-         {"text": "First test", "text_attr": curses.A_BOLD}),
-        (...,
-         "two",
-         {"text": "Second test"}),
-        (...,
-         "one",
-         {"text": "Third test"}),
-        (ANSI(["36"]),
-         "two",
-         {"text": "Fourth test"})
-    )
+    layout.routine()
 
-    dialogs.execute_script(script,
-                           gallery,
-                           before=layout.routine)
+    scene.execute(gallery, dialogs.one, dialogs.two)
 
 
 if __name__ == "__main__":
