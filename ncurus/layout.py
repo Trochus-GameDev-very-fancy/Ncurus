@@ -21,17 +21,10 @@ class Layout(Pad):
                               max_x - Layout.side_borders_total_width,
                               1, 1)
 
-        self.pads = []
-
     @property
     def half_y(self) -> int:
         """Return half of the total height window."""
         return self.max_y // 2
-
-    def add_pad(self, *pads: Pad) -> NoReturn:
-        """Add given pads to list of pads managed by the layout."""
-        for pad in pads:
-            self.pads.append(pad)
 
     def divide_window(self,
                       offsetting_y: int = 0) -> Tuple[CursesWin, CursesWin]:
@@ -59,15 +52,17 @@ class Layout(Pad):
         self.stdscr.clear()
         self.stdscr.box()
 
-        # Separation line.
-        self.stdscr.hline(self.half_y + 1 + self.offsetting_y,
-                          1,
-                          "-",
-                          self.max_x - 1)
-
+        self.draw_separation_line()
         self.stdscr.refresh()
 
+    def draw_separation_line(self) -> ConsoleEffect:
+        """Draw a separation line between top and bottom windows."""
+        self.stdscr.hline(self.half_y + 1 + self.offsetting_y,
+                    1,
+                    "-",
+                    self.max_x - 1)
+
     def routine(self) -> ConsoleEffect:
-        """Clear, call update method and refresh all pad."""
+        """Draw borders if self.win is touched."""
         if self.stdscr.is_wintouched():
             self.draw_borders()

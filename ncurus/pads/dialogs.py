@@ -1,7 +1,6 @@
 # dialogs.py
 
 from functools import partial
-from typing import Any, Callable, Iterable, Mapping, NamedTuple, Tuple
 
 from visualdialog import DialogBox
 
@@ -16,10 +15,12 @@ class Dialogs(Pad):
         self.win = win
 
     def box_factory(self, *args, **kwargs) -> DialogBox:
+        """Return a custom DialogBox instance."""
         box = DialogBox(0, 0,
                         20, 4,
                         *args,
                         **kwargs)
-        box.cbc = partial(DialogBox.char_by_char, box, self.win)
+        box.cbc = partial(DialogBox.char_by_char,
+                          box, self.win)
 
         return box

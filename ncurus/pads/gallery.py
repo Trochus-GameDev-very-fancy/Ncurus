@@ -8,6 +8,8 @@ from .pad import Pad
 
 
 class Gallery(Pad):
+    """Encapsulate a gallery."""
+
     def __init__(self, win: CursesWin):
         self.win = win
 
@@ -17,8 +19,8 @@ class Gallery(Pad):
         """
         # TODO: Make compatibitly for ASCII image.
 
-        cutted_image = img[:self.max_y]
-        for y, line in enumerate(cutted_image):
+        truncated_img = img[:self.max_y]
+        for y, line in enumerate(truncated_img):
             for x, char_color in enumerate(line[:self.max_x]):
                 self.win.addch(y, x,
                                "█",
