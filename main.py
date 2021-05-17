@@ -1,7 +1,5 @@
 # main.py
 
-import curses
-
 from ncurus.img import ANSI, ASCII
 from ncurus.layout import Layout
 from ncurus.pads import Dialogs, Gallery
@@ -26,5 +24,5 @@ def main(win):
 
 
 if __name__ == "__main__":
-    curses.wrapper(main)
+    main()
     #TODO: make dialog box responsive.
