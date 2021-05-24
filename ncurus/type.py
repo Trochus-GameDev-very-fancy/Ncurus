@@ -1,4 +1,3 @@
-# type.py
 
 from typing import Iterable, Mapping, NoReturn, Tuple, Union
 

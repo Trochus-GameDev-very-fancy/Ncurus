@@ -1,10 +1,10 @@
-# pad.py
 
 from ..type import ConsoleEffect, CursesWin
 
 
 class Pad:
     """Encapsulate a pad."""
+
     def __init__(self, win: CursesWin):
         self.win = win
 

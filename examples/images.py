@@ -2,5 +2,5 @@
 from ncurus.img import ANSI
 
 
-first_random = ANSI(["42", "0123456", "020"])
-second_random = ANSI(["36"])
+fst_random = ANSI(["42", "0123456", "020"])
+snd_random = ANSI(["36"])

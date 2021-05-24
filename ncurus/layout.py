@@ -1,10 +1,16 @@
-# layout.py
 
 import curses
-from typing import NoReturn, Tuple
+from typing import Callable, NoReturn, Tuple
 
-from .pads.pad import Pad
+from .pads import Dialogs, Gallery, Pad
 from .type import ConsoleEffect, CursesWin
+
+
+class RoutineHandler:
+
+    def __get__(self, obj, objtype=None):
+        obj.routine()
+        return obj.stdscr
 
 
 class Layout(Pad):
@@ -12,6 +18,7 @@ class Layout(Pad):
     efficiently.
     """
     side_borders_total_width = 2
+    stdscr = RoutineHandler()
 
     def __init__(self, win: CursesWin):
         max_y, max_x = win.getmaxyx()
@@ -26,8 +33,13 @@ class Layout(Pad):
         """Return half of the total height window."""
         return self.max_y // 2
 
-    def divide_window(self,
-                      offsetting_y: int = 0) -> Tuple[CursesWin, CursesWin]:
+    def disp_widgets(self, **kwargs) -> Tuple[Gallery, Dialogs]:
+        """Return a tuple composed of a Gallery and a Dialogs object."""
+        top_win, bottom_win = self.divide_window(**kwargs)
+
+        return (Gallery(top_win), Dialogs(bottom_win))
+
+    def divide_window(self, offsetting_y: int = 0) -> Tuple[CursesWin, CursesWin]:
         """Divide into two halves self.win. Return two curses windows
         object: the first is top window and the second the bottom
         window.
@@ -58,11 +70,11 @@ class Layout(Pad):
     def draw_separation_line(self) -> ConsoleEffect:
         """Draw a separation line between top and bottom windows."""
         self.stdscr.hline(self.half_y + 1 + self.offsetting_y,
-                    1,
-                    "-",
-                    self.max_x - 1)
+                          1,
+                          "-",
+                          self.max_x - 1)
 
     def routine(self) -> ConsoleEffect:
         """Draw borders if self.win is touched."""
-        if self.stdscr.is_wintouched():
-            self.draw_borders()
+        # if self.stdscr.is_wintouched():
+        self.draw_borders()

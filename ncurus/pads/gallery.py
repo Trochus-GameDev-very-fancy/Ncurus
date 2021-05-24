@@ -1,4 +1,3 @@
-# gallery.py
 
 import curses
 
@@ -8,7 +7,7 @@ from .pad import Pad
 
 
 class Gallery(Pad):
-    """Encapsulate a gallery."""
+    """Encapsulate a gallery which can show various images."""
 
     def __init__(self, win: CursesWin):
         self.win = win

@@ -1,4 +1,3 @@
-# img.py
 
 from typing import Any, Callable, Iterable, Literal, TextIO, Tuple, Union
 
