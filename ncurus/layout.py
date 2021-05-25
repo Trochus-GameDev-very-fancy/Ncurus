@@ -8,7 +8,7 @@ from .type import ConsoleEffect, CursesWin
 
 class RoutineHandler:
 
-    def __get__(self, obj, objtype=None):
+    def __get__(self, obj: "Layout", objtype=None) -> CursesWin:
         obj.routine()
         return obj.stdscr
 
@@ -39,7 +39,8 @@ class Layout(Pad):
 
         return (Gallery(top_win), Dialogs(bottom_win))
 
-    def divide_window(self, offsetting_y: int = 0) -> Tuple[CursesWin, CursesWin]:
+    def divide_window(self, *, offsetting_y: int = 0) -> Tuple[CursesWin,
+                                                               CursesWin]:
         """Divide into two halves self.win. Return two curses windows
         object: the first is top window and the second the bottom
         window.

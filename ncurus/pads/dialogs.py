@@ -15,15 +15,15 @@ class Dialogs(Pad):
     def __init__(self, win: CursesWin):
         self.win = win
 
-    def box_factory(self, *args, **kwargs) -> DialogBox:
+    def box_factory(self, *args, **kwargs) -> vd.DialogBox:
         """Return a custom visualdialog.DialogBox instance. args and
         kwargs are passed to visualdialog.DialogBox constructor.
         """
         box = vd.DialogBox(0, 0,
                            20, 4,
+                           global_win=self.win,
                            *args,
                            **kwargs)
-        box.cbc = partial(DialogBox.char_by_char,
-                          box, win=self.win)
+        box.cbc = partial(vd.DialogBox.char_by_char, box)
 
         return box

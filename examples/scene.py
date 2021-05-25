@@ -12,11 +12,11 @@ def execute(gallery, *dialog_boxes):
 
     one.cbc("First test", text_attr=A_BOLD)
 
-    two.cbc("Second test")
+    two < "Second test"
 
-    one.cbc("Third test")
+    one < "Third test"
 
     gallery.show(snd_random)
     gallery.clear()
 
-    two.cbc("Fourth test")
+    two < "Fourth test"
