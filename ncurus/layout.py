@@ -37,7 +37,7 @@ class Layout(Pad):
         """Return a tuple composed of a Gallery and a Dialogs object."""
         top_win, bottom_win = self.divide_window(**kwargs)
 
-        return (Gallery(top_win), Dialogs(bottom_win))
+        return Gallery(top_win), Dialogs(bottom_win)
 
     def divide_window(self, *, offsetting_y: int = 0) -> Tuple[CursesWin,
                                                                CursesWin]:

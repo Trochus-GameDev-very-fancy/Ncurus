@@ -4,6 +4,8 @@ import curses
 from curses import cbreak, echo, nocbreak, noecho
 from typing import Callable, NoReturn
 
+from core import process_scene
+
 
 def init_color_pairs() -> NoReturn:
     """Initialize all available curses color pairs."""

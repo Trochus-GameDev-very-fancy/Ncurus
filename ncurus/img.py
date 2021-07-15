@@ -1,5 +1,12 @@
 
-from typing import Any, Callable, Iterable, Literal, TextIO, Tuple, Union
+from functools import partialmethod
+from typing import (Any, Callable, Iterable, Literal, Protocol, TextIO, Tuple,
+                    Union)
+
+
+class BoolValue(Protocol):
+    def __bool__(self) -> bool:
+        ...
 
 
 class BaseImage:
@@ -27,7 +34,7 @@ class BaseImage:
 
     def is_valid(self,
                  iterable: Iterable[str],
-                 key: Callable[[str], Any]) -> Tuple[str]:
+                 key: Callable[[str], BoolValue]) -> Tuple[str]:
         """Return a parsed iterable of string."""
         for index, line in enumerate(iterable):
             for position, char in enumerate(line):
@@ -38,7 +45,7 @@ class BaseImage:
         return tuple(iterable)
 
     @classmethod
-    def from_path(cls, path: str, obj: "BaseImage") -> "BaseImage":
+    def from_path(cls, path: str) -> "BaseImage":
         """Return an image object from content of given file path."""
         content = open(path).read()
 
@@ -47,7 +54,7 @@ class BaseImage:
         except ValueError:
             raise ValueError("Invalid image format")
 
-        return obj(content.rstrip("\n").split("\n"))
+        return cls(content.rstrip("\n").split("\n"))
 
 
 class ANSI(BaseImage):
@@ -59,14 +66,8 @@ class ANSI(BaseImage):
               "313",
               "525"])
     """
-    def is_valid(self, iterable: Iterable[str]) -> Tuple[str]:
-        key = lambda char: char in "0123456"
-
-        return BaseImage.is_valid(self, iterable, key=key)
-
-    @staticmethod
-    def from_path(path: str):
-        return BaseImage.from_path(path, ANSI)
+    is_valid = partialmethod(super().is_valid,
+                             key=(lambda char: char in "0123456"))
 
 
 class ASCII(BaseImage):
@@ -78,11 +79,5 @@ class ASCII(BaseImage):
                " I ",
                "o o"])
     """
-    def is_valid(self, iterable: Iterable[str]) -> Tuple[str]:
-        key = lambda char: True
-
-        return BaseImage.is_valid(self, iterable, key=key)
-
-    @staticmethod
-    def from_path(path: str):
-        return BaseImage.from_path(path, ASCII)
+    is_valid = partialmethod(super().is_valid,
+                             key=(lambda char: True))
