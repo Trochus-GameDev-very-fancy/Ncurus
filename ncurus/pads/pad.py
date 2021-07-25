@@ -3,7 +3,9 @@ from ..type import ConsoleEffect, CursesWin
 
 
 class Pad:
-    """Encapsulate a pad."""
+    """Encapsulate a pad. A pad extends capacity of a ``curses`` window
+    object.
+    """
 
     def __init__(self, win: CursesWin):
         self.win = win
@@ -26,3 +28,8 @@ class Pad:
     def max_y(self) -> int:
         """Return number of line of windows."""
         return self.win.getmaxyx()[0]
+
+    @property
+    def half_y(self) -> int:
+        """Return half of the total height window."""
+        return self.max_y // 2

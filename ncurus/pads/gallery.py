@@ -13,8 +13,8 @@ class Gallery(Pad):
         self.win = win
 
     def show(self, img: BaseImage) -> ConsoleEffect:
-        """Display given img in self.win. Images exceeding the width and
-        height of the window are cut off.
+        """Display given img in ``self.win``. Images exceeding the width
+        and height of the window are cut off.
         """
         # TODO: Make compatibitly for ASCII image.
 
