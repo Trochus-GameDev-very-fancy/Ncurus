@@ -1,11 +1,10 @@
 
 from curses import (COLOR_BLACK, COLOR_BLUE, COLOR_CYAN, COLOR_GREEN,
                     COLOR_MAGENTA, COLOR_RED, COLOR_WHITE, COLOR_YELLOW)
-from typing import Iterable, Literal, Mapping, NoReturn, Tuple, Union
+from typing import Iterable, Literal, Mapping, NoReturn, Protocol, Tuple, Union
 
 import _curses
 from visualdialog import DialogBox
-
 
 CursesWin = _curses.window
 
@@ -23,3 +22,8 @@ CursesColor = Literal[COLOR_BLACK,
 ConsoleEffect = NoReturn
 
 CursesInputMethod = Literal["getch", "getkey", "getwch"]
+
+
+class WidgetProtocol(Protocol):
+    def routine(self) -> ConsoleEffect:
+        ...

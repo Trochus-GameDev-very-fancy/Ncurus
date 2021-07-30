@@ -3,10 +3,10 @@ import curses
 
 from ncurus.img import BaseImage
 from ..type import ConsoleEffect, CursesWin
-from .pad import Pad
+from .widget import Widget
 
 
-class Gallery(Pad):
+class Gallery(Widget):
     """Encapsulate a gallery which can show various images."""
 
     def __init__(self, win: CursesWin):

@@ -2,9 +2,9 @@
 from ..type import ConsoleEffect, CursesWin
 
 
-class Pad:
-    """Encapsulate a pad. A pad extends capacity of a ``curses`` window
-    object.
+class Widget:
+    """Encapsulate a widget. A widget manages positions and dimensions
+    of a ``curses`` window object.
     """
 
     def __init__(self, win: CursesWin):

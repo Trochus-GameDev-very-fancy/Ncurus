@@ -1,33 +1,35 @@
 
 import curses
 import textwrap
-from typing import Any, Callable, Dict, List, Literal, Tuple, Union
+from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Union
 
 from ..core import iterkey
 from ..type import ConsoleEffect, CursesColor, CursesKey, CursesWin
-from .pad import Pad
+from .widget import Widget
 
 
 Justify = Union[Callable[[int], str],
                 Callable[[str, int], str]]
 
-class TextPad(Pad):
+
+class TextPad(Widget):
     """"Encapsulate a textpad."""
-    margin_top = 2
+    margin_top = 1
     margin_side = 3
-    center = False
 
     def __init__(self,
                  win: CursesWin,
-                 height: int,
-                 width: int,
+                 title: Optional[str] = None,
                  previous_key: CursesKey = curses.KEY_UP,
                  next_key: CursesKey = curses.KEY_DOWN,
                  end_key: CursesKey = "\n",
                  color_pair_nb: int = 0):
         self.win = win
 
-        self.line_per_screen, self.char_per_line = height, width
+        max_y, max_x = win.getmaxyx()
+
+        self.char_per_line = max_x - 2*self.margin_side
+        self.line_per_screen = max_y - 4*self.margin_top
 
         self.textbox = self.make_textbox(win)
 
@@ -47,15 +49,15 @@ class TextPad(Pad):
         elif self.char_per_line <= 0:
             raise ValueError(f"textpad width must be superior to 0")
         else:
-            return self.win.subwin(self.line_per_screen + 1,
+            return self.win.derwin(self.line_per_screen,
                                    self.char_per_line,
-                                   self.margin_top,
+                                   self.margin_top*2,
                                    self.margin_side)
 
     def show(self,
              text: str,
              *,
-             justify : Justify = lambda x: x) -> ConsoleEffect:
+             justify: Justify = lambda x: x) -> ConsoleEffect:
         """Display a scrollable textbox until a key contained in
         ``self.pass_keys`` was pressed.
         """
@@ -106,7 +108,6 @@ class TextPad(Pad):
                             "+",
                             "+",
                             "+")
-            # self.textbox.bkgd(".")
             self.win.refresh()
 
     def wrap(self,
