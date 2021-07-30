@@ -1,9 +1,13 @@
 
 import curses
-from typing import Callable, NoReturn, Tuple
+from typing import Callable, Literal, NoReturn, Optional, Tuple
 
-from .pads import Dialogs, Gallery, Pad
 from .type import ConsoleEffect, CursesWin
+from .widgets import Dialogs, Gallery, Widget
+
+
+Dimension = Literal["full", "half"]
+Position = Literal["up", "down"]
 
 
 class RoutineHandler:
@@ -13,60 +17,74 @@ class RoutineHandler:
         return obj.stdscr
 
 
-class Layout(Pad):
-    """Encapsulate a layout to manage a set of windows more
-    efficiently.
-    """
-    side_borders_total_width = 2
+class Layout(Widget):
+    """Encapsulate a layout to manage a set of widget more efficiently."""
     stdscr = RoutineHandler()
 
-    def __init__(self, win: CursesWin):
+    def __init__(self,
+                 win: CursesWin,
+                 *,
+                 offsetting_y: int = 0,
+                 side_borders_width=1):
+        self.stdscr = win  #  Catch original win.
+
         max_y, max_x = win.getmaxyx()
 
-        self.stdscr = win  # Catch original win.
-        self.win = win.subwin(max_y - Layout.side_borders_total_width,
-                              max_x - Layout.side_borders_total_width,
-                              1, 1)
+        self.win = win.subwin(max_y - side_borders_width*2,
+                              max_x - side_borders_width*2,
+                              side_borders_width,
+                              side_borders_width)
 
-    @property
-    def half_y(self) -> int:
-        """Return half of the total height window."""
-        return self.max_y // 2
-
-    def disp_widgets(self, **kwargs) -> Tuple[Gallery, Dialogs]:
-        """Return a tuple composed of a Gallery and a Dialogs object."""
-        top_win, bottom_win = self.divide_window(**kwargs)
-
-        return Gallery(top_win), Dialogs(bottom_win)
-
-    def divide_window(self, *, offsetting_y: int = 0) -> Tuple[CursesWin,
-                                                               CursesWin]:
-        """Divide into two halves self.win. Return two curses windows
-        object: the first is top window and the second the bottom
-        window.
-
-        By default self.win was divided in twohalves of equal height.
-        This can be ajustable with offesting_y parameter. A given
-        positive integer will enlarge the top window and a negative
-        integer will reduce it.
-        """
         self.offsetting_y = offsetting_y
+        self.side_borders_width = side_borders_width
 
-        top_win = self.win.subwin(self.half_y + offsetting_y,
-                                  self.max_x,
-                                  1, 1)
-        bottom_win = self.win.subwin(self.half_y + 2 + offsetting_y,
-                                     1)
+        self.deriv = self.win.subwin
 
-        return top_win, bottom_win
+    def disp_widget(self,
+                    widget: Widget,
+                    dimension: Dimension,
+                    position: Optional[Position] = None,
+                    *args,
+                    **kwargs) -> Widget:
+        """Return an instance of given ``widget`` class.
 
-    def draw_borders(self) -> ConsoleEffect:
-        """Draw layout borders and separation between windows line."""
+        The ``curse`` window object that passed to ``widget``initializer
+        is create according given ``dimension`` and ``position``.
+        """
+        offsetting_y = self.offsetting_y
+        side_borders_width = self.side_borders_width
+
+        def calc_coord(dim: Dimension, pos: Position) -> Tuple[int]:
+            if dim == "full":
+                return (side_borders_width,
+                        side_borders_width)
+            elif dim == "half" and pos == "up":
+                return (self.half_y + offsetting_y,
+                        self.max_x,
+                        side_borders_width,
+                        side_borders_width)
+            elif dim == "half" and pos == "down":
+                return (self.half_y + 2 + offsetting_y,
+                        side_borders_width)
+            else:
+                raise ValueError()
+
+        win = self.deriv(*calc_coord(dimension, position))
+
+        return widget(win, *args, **kwargs)
+
+    def routine(self) -> ConsoleEffect:
+        """Draw layout borders."""
         self.stdscr.clear()
+        self.draw_borders()
+        self.stdscr.refresh()
+
+    def draw_borders(self, *, sep_line: bool = True) -> ConsoleEffect:
+        """Draw layout borders and separation between windows line."""
         self.stdscr.box()
 
-        self.draw_separation_line()
-        self.stdscr.refresh()
+        if sep_line:
+            self.draw_separation_line()
 
     def draw_separation_line(self) -> ConsoleEffect:
         """Draw a separation line between top and bottom windows."""
@@ -74,8 +92,3 @@ class Layout(Pad):
                           1,
                           "-",
                           self.max_x - 1)
-
-    def routine(self) -> ConsoleEffect:
-        """Draw borders if self.win is touched."""
-        # if self.stdscr.is_wintouched():
-        self.draw_borders()

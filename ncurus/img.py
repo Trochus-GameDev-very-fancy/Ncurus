@@ -50,7 +50,7 @@ class BaseImage:
         content = open(path).read()
 
         try:
-            start, content, end = content.split(cls.sep)
+            content = content.split(cls.sep)[1]
         except ValueError:
             raise ValueError("Invalid image format")
 
@@ -66,7 +66,7 @@ class ANSI(BaseImage):
               "313",
               "525"])
     """
-    is_valid = partialmethod(super().is_valid,
+    is_valid = partialmethod(BaseImage.is_valid,
                              key=(lambda char: char in "0123456"))
 
 
@@ -79,5 +79,5 @@ class ASCII(BaseImage):
                " I ",
                "o o"])
     """
-    is_valid = partialmethod(super().is_valid,
+    is_valid = partialmethod(BaseImage.is_valid,
                              key=(lambda char: True))
