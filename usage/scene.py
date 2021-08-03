@@ -1,7 +1,7 @@
 
 from curses import A_BOLD
 
-from examples.images import fst_random, snd_random
+from usage.images import fst_random, snd_random
 
 
 def execute(gallery, *dialog_boxes):

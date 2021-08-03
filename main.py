@@ -4,7 +4,7 @@ from ncurus.img import ANSI, ASCII
 from ncurus.layout import Layout
 import ncurus
 
-from examples import scene
+from usage import scene
 
 
 @ncurus.startup()
