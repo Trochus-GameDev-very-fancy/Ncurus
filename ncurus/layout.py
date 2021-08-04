@@ -72,23 +72,3 @@ class Layout(Widget):
         win = self.deriv(*calc_coord(dimension, position))
 
         return widget(win, *args, **kwargs)
-
-    def routine(self) -> ConsoleEffect:
-        """Draw layout borders."""
-        self.stdscr.clear()
-        self.draw_borders()
-        self.stdscr.refresh()
-
-    def draw_borders(self, *, sep_line: bool = True) -> ConsoleEffect:
-        """Draw layout borders and separation between windows line."""
-        self.stdscr.box()
-
-        if sep_line:
-            self.draw_separation_line()
-
-    def draw_separation_line(self) -> ConsoleEffect:
-        """Draw a separation line between top and bottom windows."""
-        self.stdscr.hline(self.half_y + 1 + self.offsetting_y,
-                          1,
-                          "-",
-                          self.max_x - 1)
