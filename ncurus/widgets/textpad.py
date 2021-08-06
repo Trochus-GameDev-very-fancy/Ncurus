@@ -3,7 +3,7 @@ import curses
 import textwrap
 from typing import Any, Callable, Dict, List, Literal, Optional, Tuple, Union
 
-from ..core import iterkey
+from ..input import iterkey
 from ..type import ConsoleEffect, CursesColor, CursesKey, CursesWin
 from .widget import Widget
 

@@ -6,17 +6,9 @@ from curses import cbreak, echo, nocbreak, noecho
 from functools import wraps
 from typing import Callable, NoReturn
 
+from .attr import TextAttributes
 from .core import process_scene
-
-
-def init_color_pairs() -> NoReturn:
-    """Initialize all available curses color pairs."""
-    curses.init_pair(1, curses.COLOR_BLUE, 0)
-    curses.init_pair(2, curses.COLOR_CYAN, 0)
-    curses.init_pair(3, curses.COLOR_GREEN, 0)
-    curses.init_pair(4, curses.COLOR_MAGENTA, 0)
-    curses.init_pair(5, curses.COLOR_RED, 0)
-    curses.init_pair(6, curses.COLOR_YELLOW, 0)
+from .input import iterkey
 
 
 def startup(smooth_crash: bool = False) -> Callable:

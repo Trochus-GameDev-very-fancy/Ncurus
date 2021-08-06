@@ -12,6 +12,7 @@ from examples import scene
 def main(win):
     layout = Layout(win)
 
+    gallery_one = Layout.add()
     gallery = layout.disp_widget(Gallery, "half", "up")
     dialogs = layout.disp_widget(Dialogs, "half", "down")
 

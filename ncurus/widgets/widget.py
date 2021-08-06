@@ -1,5 +1,13 @@
 
-from ..type import ConsoleEffect, CursesWin
+from ..type import ConsoleEffect, CursesWin, WidgetProtocol
+
+
+class DynamicPos:
+
+    def __set__(self, obj: WidgetProtocol, value: int) -> None:
+        """"""
+        obj._width = value
+        obj.win.resize(obj.height, obj.width)
 
 
 class Widget:

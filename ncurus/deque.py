@@ -1,17 +1,49 @@
-"""This module contains implementation of a deque specialised in size
-management.
-"""
+"""This module contains implementation of a deque limited in size."""
+
+__all__ = ["Deque", "DequeOverflow"]
 
 import collections
 from typing import Any, Iterable, List, NoReturn, Tuple
 
 
-class DequeOverflow(Exception):
+class WidgetListOverflow(Exception):
     """An exception raised when a deque is full."""
 
     def __str__(self) -> str:
-        return "the addition of given object causes exceed of deque size"
+        return "the addition of given object causes exceed of widget list size"
 
+
+class WidgetList(list):
+
+    def __init__(self, max_percent: int = 100):
+        self.slots = []
+
+    @property
+    def total_percent(self) -> int:
+        """Returns the occupied space of the stack."""
+        return sum(percent for (percent, _) in self)
+
+    def bound_check(self, percent: int) -> NoReturn:
+        """Raises an exception if given percent added don't exceed stack
+        ``max_percent``.
+
+        :raise StackOverflow: if addition of given percent exceed space of
+            the stack.
+        """
+        if self.total_percent + percent > self.max_percent:
+            raise WidgetListOverflow
+
+   @property
+    def total_percent(self) -> int:
+        """Returns the occupied space of the stack."""
+        return sum(percent for (percent, _) in self)
+
+    def append(self, x: Any, percent: int) -> None:
+        """Add ``x`` taking given percent of space to the right side of the
+        deque.
+        """
+        self.bound_check(percent)
+        return super().append((percent, x))
 
 class Deque(collections.deque):
     """Encapsulate a deque.

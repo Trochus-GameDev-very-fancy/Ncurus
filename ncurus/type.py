@@ -25,5 +25,15 @@ CursesInputMethod = Literal["getch", "getkey", "getwch"]
 
 
 class WidgetProtocol(Protocol):
+    win: CursesWin
+
+    pos_x: int
+    pos_y: int
+    width: int
+    heigth: int
+
+    height_min: int
+    width_min: int
+
     def routine(self) -> ConsoleEffect:
         ...

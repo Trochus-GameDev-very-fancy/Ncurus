@@ -1,74 +1,62 @@
+"""Contains objects related to layout."""
+
+__all__ = ["Layout"]
 
 import curses
 from typing import Callable, Literal, NoReturn, Optional, Tuple
 
-from .type import ConsoleEffect, CursesWin
+from .deque import WidgetList
+from .type import ConsoleEffect, CursesWin, WidgetProtocol
 from .widgets import Dialogs, Gallery, Widget
 
 
-Dimension = Literal["full", "half"]
-Position = Literal["up", "down"]
+def calc(base, new):
+    return base*10 // new
 
 
-class RoutineHandler:
+class Layout:
+    """Encapsulate a layout to manage a set of widget efficiently."""
 
-    def __get__(self, obj: "Layout", objtype=None) -> CursesWin:
-        obj.routine()
-        return obj.stdscr
+    def __init__(self, win: CursesWin):
+        self.win = win
+        self.widgets = WidgetList()
 
+        self.resize()
 
-class Layout(Widget):
-    """Encapsulate a layout to manage a set of widget more efficiently."""
-    stdscr = RoutineHandler()
-
-    def __init__(self,
-                 win: CursesWin,
-                 *,
-                 offsetting_y: int = 0,
-                 side_borders_width=1):
-        self.stdscr = win  #  Catch original win.
-
-        max_y, max_x = win.getmaxyx()
-
-        self.win = win.subwin(max_y - side_borders_width*2,
-                              max_x - side_borders_width*2,
-                              side_borders_width,
-                              side_borders_width)
-
-        self.offsetting_y = offsetting_y
-        self.side_borders_width = side_borders_width
-
-        self.deriv = self.win.subwin
+    @property
+    def dimensions(self) -> Tuple[int, int]:
+        """Returns a tuple composed of ``self.width`` and ``self.height``."""
+        return self.width, self.height
 
     def disp_widget(self,
-                    widget: Widget,
-                    dimension: Dimension,
-                    position: Optional[Position] = None,
+                    widget: WidgetProtocol,
+                    purcent_x: int,
+                    purcent_y: int,
                     *args,
-                    **kwargs) -> Widget:
-        """Return an instance of given ``widget`` class.
+                    **kwargs):
+        """"""
+        nlines = calc(self.height, purcent_x)
+        ncols = calc(self.width, purcent_y)
 
-        The ``curse`` window object that passed to ``widget``initializer
-        is create according given ``dimension`` and ``position``.
-        """
-        offsetting_y = self.offsetting_y
-        side_borders_width = self.side_borders_width
+        derivate_win = self.win.subwin(nlines, ncols, )
 
-        def calc_coord(dim: Dimension, pos: Position) -> Tuple[int]:
-            if dim == "full":
-                return (side_borders_width,
-                        side_borders_width)
-            elif dim == "half" and pos == "up":
-                return (self.half_y + offsetting_y,
-                        self.max_x,
-                        side_borders_width,
-                        side_borders_width)
-            elif dim == "half" and pos == "down":
-                return (self.half_y + 2 + offsetting_y,
-                        side_borders_width)
-            else:
-                raise ValueError()
+        widget = Widget(*args, **kwargs)
 
-        win = self.deriv(*calc_coord(dimension, position))
+        self.widgets.append(widget, purcent_x, purcent_y)
 
-        return widget(win, *args, **kwargs)
+        return widget()
+
+    def refresh(self) -> None:
+        """Calls ``routine`` method of each widgets in ``self.widgets``."""
+        self.resize()
+
+        for widget, (dim_x, dim_y) in self.widgets:
+            widget.width = self.width*10 // dim_x
+            widget.height = self.height*10 // dim_y 
+
+            widget.routine()
+
+    def resize(self) -> None:
+        """Sets ``self.width`` and ``self.heigth`` to current size of terminal."""
+        self.width, self.heigth = os.get_terminal_size()
+        self.refresh()
