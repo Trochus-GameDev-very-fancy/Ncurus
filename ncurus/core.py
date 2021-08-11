@@ -36,7 +36,7 @@ def iterkey(win,
             yield key
 
 
-class TextAttributes(contextlib.ContextDecorator):
+class TextAttr(contextlib.ContextDecorator):
     """A context manager to manage curses text attributes."""
 
     def __init__(self, win, *attr: CursesTextAttr):

@@ -33,7 +33,28 @@ def main2(win):
     layout.win.getch()
 
 
-if __name__ == "__main__":
-    main2()
+@ncurus.startup(smooth_crash=True)
+def main3(win):
+    choices = (
+        ("Foo", 1),
+        ("Bar", 2),
+        ("Foobar2000", 3)
+    )
 
-    #TODO: Implement ``user_decor`` decorator.
+    _, max_x = win.getmaxyx()
+
+    dialog_box = ncurus.ChoiceBox(1, 1,
+                                  max_x - 2, 5,
+                                 "First",
+                                 1)
+
+    dialog_box.confirm_keys.append("\n")
+    dialog_box.char_by_char("The first choice", win)
+
+    dialog_box.give_choice(win, choices, 2, 6)
+
+
+if __name__ == "__main__":
+    main3()
+
+    # TODO: Add param boolean ``no_input`` to visualdialog
