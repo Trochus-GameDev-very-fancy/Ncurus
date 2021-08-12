@@ -7,6 +7,7 @@ from functools import wraps
 from typing import Callable, NoReturn
 
 from .core import process_scene
+from .widgets import *
 
 
 def init_color_pairs() -> NoReturn:
