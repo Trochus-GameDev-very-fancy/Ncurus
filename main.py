@@ -41,9 +41,9 @@ def main3(win):
         ("Foobar2000", 3)
     )
 
-    _, max_x = win.getmaxyx()
+    max_y, max_x = win.getmaxyx()
 
-    dialog_box = ncurus.ChoiceBox(1, 1,
+    dialog_box = ncurus.ChoiceBox(1, max_y - 11,
                                   max_x - 2, 5,
                                  "First",
                                  1)
