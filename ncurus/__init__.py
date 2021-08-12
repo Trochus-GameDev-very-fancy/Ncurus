@@ -7,7 +7,6 @@ from functools import wraps
 from typing import Callable, NoReturn
 
 from .core import process_scene
-from .choice import ChoiceBox
 
 
 def init_color_pairs() -> NoReturn:
