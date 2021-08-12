@@ -5,8 +5,8 @@ from typing import Any, Generator, Iterable, Optional, Tuple
 
 from visualdialog import DialogBox
 
-from .core import TextAttr, iterkey
-from .type import CursesKey, CursesWin
+from ..core import TextAttr, iterkey
+from ..type import CursesKey, CursesWin
 
 
 Choices = Iterable[Tuple[str, Any]]
